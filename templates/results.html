@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    
+    <!-- Thêm link tới CSS của DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    
+        th {
+            background-color: #f2f2f2;
+        }
+    
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    
+        tr:hover {
+            background-color: #ddd;
+        }
+    
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+    
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    
+    <!-- Thêm script của jQuery và DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Khởi tạo DataTables
+            var table = $('table').DataTable({
+                "scrollX": true,  // Cho phép cuộn theo chiều ngang
+                "paging": true,   // Phân trang
+                "searching": true, // Tìm kiếm
+                "ordering": true,  // Sắp xếp
+                "lengthMenu": [10, 25, 50, 100],  // Chọn số dòng trên mỗi trang
+                "order": [[0, 'asc']],  // Sắp xếp theo cột đầu tiên mặc định
+                
+                // Khi bảng được vẽ lại, reset lại cột "Index"
+                "drawCallback": function(settings) {
+                    // Lấy tất cả các dòng trong bảng sau khi sắp xếp
+                    var api = this.api();
+                    var rows = api.rows({page:'current'}).nodes();  // Chỉ lấy các dòng trong trang hiện tại
+
+                    // Duyệt qua từng dòng và cập nhật lại cột "Index"
+                    api.column(0, {page:'current'}).nodes().each(function(cell, i) {
+                        $(cell).html(i + 1);  // Cập nhật lại index từ 1, 2, 3...
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Danh sách Sản phẩm</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá thấp nhất</th>
+                <th>Giá cao nhất</th>
+                <th>Số lần nhấp chuột</th>
+                <th>Số lượt thêm vào giỏ</th>
+                <th>Đơn hàng tạo ra</th>
+                <th>Doanh thu</th>
+                <th>Số lượng bán</th>
+                <th>COR (%)</th>
+                <th>Đơn hàng xác nhận</th>
+                <th>Doanh thu xác nhận</th>
+                <th>Số lượng bán xác nhận</th>
+                <th>COR xác nhận (%)</th>   
+
+                <th>Link Shopee</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product['Index'] }}</td>
+                <td>{{ product['ID'] }}</td>
+                <td>{{ product['Tên sản phẩm'] }}</td>
+                <td>{{ product['Giá thấp nhất'] }}</td>
+                <td>{{ product['Giá cao nhất'] }}</td>
+                <td>{{ product['Số lần nhấp chuột'] }}</td>
+                <td>{{ product["Số lượt thêm vào giỏ"] }}</td>
+                <td>{{ product["Đơn hàng tạo ra"] }}</td>
+                <td>{{ product['Doanh thu'] }}</td>
+                <td>{{ product['Số lượng bán'] }}</td>
+                <td>{{ product['COR (%)'] }}</td>
+                <td>{{ product['Đơn hàng xác nhận'] }}</td>
+                <td>{{ product['Doanh thu xác nhận'] }}</td>
+                <td>{{ product['Số lượng bán xác nhận'] }}</td>
+                <td>{{ product['COR xác nhận (%)'] }}</td>
+                <td><a href="{{ product['Link Shopee'] }}" target="_blank">Link</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
